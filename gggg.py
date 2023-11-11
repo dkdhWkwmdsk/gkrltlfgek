@@ -1,41 +1,33 @@
 import streamlit as st
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
 
 def main():
-    st.title("Iris 데이터셋 시각화")
+    st.title("간단한 데이터 시각화 애플리케이션")
 
-    # Iris 데이터셋 로드
-    iris_df = load_iris_dataset()
+    # CSV 파일 업로드
+    uploaded_file = st.file_uploader("CSV 파일 업로드", type=["csv"])
 
-    # 사용자로부터 꽃 종류 선택
-    selected_species = st.selectbox("꽃 종류 선택", iris_df['species'].unique())
+    if uploaded_file is not None:
+        # 업로드된 파일을 DataFrame으로 읽기
+        df = pd.read_csv(uploaded_file)
 
-    # 선택한 꽃 종류의 데이터 필터링
-    selected_data = iris_df[iris_df['species'] == selected_species]
+        # 데이터 테이블 표시
+        st.dataframe(df)
 
-    # 선택한 꽃 종류의 특성 시각화
-    visualize_data(selected_data)
+        # 사용자로부터 선택한 컬럼
+        selected_column = st.selectbox("시각화할 컬럼 선택", df.columns)
 
-def load_iris_dataset():
-    # seaborn의 Iris 데이터셋 로드
-    iris = sns.load_dataset('iris')
-    return iris
+        # 선택한 컬럼의 히스토그램
+        st.pyplot(plot_histogram(df, selected_column))
 
-def visualize_data(data):
-    # 꽃 종류에 따른 특성 시각화
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
-
-    # 꽃받침 길이와 꽃받침 너비의 관계
-    sns.scatterplot(x='sepal_length', y='sepal_width', data=data, hue='species', ax=ax1)
-    ax1.set_title('Sepal Length vs Sepal Width')
-
-    # 꽃잎 길이와 꽃잎 너비의 관계
-    sns.scatterplot(x='petal_length', y='petal_width', data=data, hue='species', ax=ax2)
-    ax2.set_title('Petal Length vs Petal Width')
-
-    st.pyplot(fig)
+def plot_histogram(df, column):
+    # 선택한 컬럼의 히스토그램 생성
+    fig, ax = plt.subplots()
+    df[column].hist(ax=ax, bins=20, edgecolor='black')
+    ax.set_title(f'{column} Histogram')
+    ax.set_xlabel(column)
+    ax.set_ylabel('Frequency')
+    return fig
 
 if __name__ == "__main__":
     main()
