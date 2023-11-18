@@ -9,6 +9,6 @@ with tab1:
    df=pd.read_csv("2023-11-18T01-14_export.csv")
    st.dataframe(df)
    st.divider()
-   tab,tab2,tab3=st.tabs{"Sex","Pclass","Embarked"}
+   tab,tab2,tab3=st.tabs(["Sex","Pclass","Embarked"])
    with tab1:
       st.bar_chart(chart_data)
