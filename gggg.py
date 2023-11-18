@@ -11,4 +11,4 @@ with tab1:
    st.divider()
    tab,tab2,tab3=st.tabs(["Sex","Pclass","Embarked"])
    with tab1:
-      st.bar_chart(chart_data)
+      st.bar_chart(df,x="Sex",y="Pclass")
